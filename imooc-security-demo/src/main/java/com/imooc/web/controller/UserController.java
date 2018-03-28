@@ -37,7 +37,7 @@ public class UserController {
 		if (errors.hasErrors()) {
 			errors.getAllErrors().stream().forEach(error->logger.error(error.getDefaultMessage()));			
 		};
-		System.out.println(ReflectionToStringBuilder.toString(user, ToStringStyle.MULTI_LINE_STYLE));
+		System.out.println(ReflectionToStringBuilder.toString(user, ToStringStyle.DEFAULT_STYLE));
 		System.out.println(user.getBirthday());
 		user.setId("1");
 		user.setBirthday(new Date());
