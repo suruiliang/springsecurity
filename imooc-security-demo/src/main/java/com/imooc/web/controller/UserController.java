@@ -13,6 +13,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -21,18 +24,23 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import com.imooc.dto.User;
 import com.imooc.dto.UserQueryCondition;
-import com.imooc.exception.UserNotExistException;
 
 @RestController
+@RequestMapping(value="/user")
 public class UserController {
 	private Logger logger=LoggerFactory.getLogger(getClass());
 	
-	@PostMapping(value="/user")
+	@GetMapping(value="/me")
+	public Object getCurrentUser(@AuthenticationPrincipal UserDetails user) {
+		return user;
+	}
+	@PostMapping
 	@JsonView(User.UserDetailView.class)
 	public User create(@Valid @RequestBody User user) {
 		System.out.println(ReflectionToStringBuilder.toString(user, ToStringStyle.DEFAULT_STYLE));
@@ -41,7 +49,7 @@ public class UserController {
 		user.setBirthday(new Date());
 		return user;
 	}
-	@PutMapping(value="/user/{id:\\d+}")
+	@PutMapping(value="/{id:\\d+}")
 	@JsonView(User.UserDetailView.class)
 	public User update(@Valid @RequestBody User user,BindingResult errors,@PathVariable String id) {
 		if (errors.hasErrors()) {
@@ -55,11 +63,11 @@ public class UserController {
 		user.setBirthday(new Date());
 		return user;
 	}
-	@DeleteMapping(value="/user/{id:\\d+}")
+	@DeleteMapping(value="/{id:\\d+}")
 	public void delete(@PathVariable String id) {
 		System.out.println(id);
 	}
-	@GetMapping(value="/user")
+	@GetMapping
 	@JsonView(User.UserSimpleView.class)
 	public List<User> query(UserQueryCondition condition,@PageableDefault(page=1,size=15,sort="username,ASC") Pageable pageable) {
 		System.out.println(ReflectionToStringBuilder.toString(condition, ToStringStyle.MULTI_LINE_STYLE));
@@ -72,7 +80,7 @@ public class UserController {
 		users.add(new User());
 		return users;
 	}
-	@GetMapping(value="/user/{id:\\d+}")
+	@GetMapping(value="/{id:\\d+}")
 	@JsonView(User.UserDetailView.class)
 	public User getInfo(@PathVariable String id) {
 //		throw new RuntimeException(id);

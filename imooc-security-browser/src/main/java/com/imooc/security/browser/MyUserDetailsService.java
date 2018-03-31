@@ -24,7 +24,9 @@ public class MyUserDetailsService implements UserDetailsService {
 		//return new User(username, "123456", AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_ADMIN"));
 		String password=passwordEncoder.encode("123456");
 		logger.info("数据库密码是："+password);
-		return new User(username, password, true, true, true, true, AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_ADMIN"));
+		return new User(username, password,
+				true, true, true, true, 
+				AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_ADMIN"));
 	}
 
 }
