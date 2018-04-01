@@ -6,20 +6,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 
-import com.imooc.security.browser.authentication.ImoocAuthenticationFailureHandler;
+import com.imooc.security.core.authentication.AbstractChannelSecurityConfig;
+import com.imooc.security.core.authentication.mobile.SmsCodeAuthenticationSecurityConfig;
 import com.imooc.security.core.properties.SecurityProperties;
-import com.imooc.security.core.validate.code.ValidateCodeController;
-import com.imooc.security.core.validate.code.ValidateCodeFilter;
+import com.imooc.security.core.validate.code.ValidateCodeSecurityConfig;
 
 /**
  * @author suruiliang
@@ -28,7 +26,7 @@ import com.imooc.security.core.validate.code.ValidateCodeFilter;
  * @Description 类描述
  */
 @Configuration
-public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
+public class BrowserSecurityConfig extends AbstractChannelSecurityConfig {
 	@Autowired
 	private SecurityProperties securityProperties;
 	@Autowired
@@ -39,6 +37,11 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
 	private DataSource dataSource;
 	@Autowired
 	private UserDetailsService userDetailsService;
+	@Autowired
+	private SmsCodeAuthenticationSecurityConfig smsCodeAuthenticationSecurityConfig;
+	@Autowired
+	private ValidateCodeSecurityConfig validateCodeSecurityConfig;
+	
 
 	@Bean
 	public PasswordEncoder passwordEncoder(){
@@ -49,18 +52,19 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
 	public PersistentTokenRepository persistentTokenRepository(){
 		JdbcTokenRepositoryImpl tokenRepository=new JdbcTokenRepositoryImpl();
 		tokenRepository.setDataSource(dataSource);
-//		tokenRepository.setCreateTableOnStartup(true);
+		//		tokenRepository.setCreateTableOnStartup(true);
 		return tokenRepository;
 	}
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		ValidateCodeFilter validateCodeFilter=new ValidateCodeFilter();
-		validateCodeFilter.setAuthenticationFailureHandler(imoocAuthenticationFailureHandler);
-		validateCodeFilter.setSecurityProperties(securityProperties);
-		validateCodeFilter.afterPropertiesSet();
+		applyPasswordAuthenticationConfig(http);
 
-		http.addFilterBefore(validateCodeFilter, UsernamePasswordAuthenticationFilter.class)
+		http
+		.apply(validateCodeSecurityConfig)
+		.and()
+		.apply(smsCodeAuthenticationSecurityConfig)
+		.and()
 		.formLogin()
 		//		http.httpBasic()
 		.loginPage("/authentication/require")
@@ -76,12 +80,13 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
 		.authorizeRequests()
 		.antMatchers("/authentication/require",
 				securityProperties.getBrowser().getLoginPage(),
-				"/code/image")
+				"/code/*")
 		.permitAll()
 		.anyRequest()
 		.authenticated()
 		.and()
 		.csrf()
-		.disable();
+		.disable()
+		.apply(smsCodeAuthenticationSecurityConfig);
 	}
 }
