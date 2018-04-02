@@ -15,7 +15,6 @@ import com.imooc.security.core.validate.code.ValidateCodeException;
 import com.imooc.security.core.validate.code.ValidateCodeGenerator;
 import com.imooc.security.core.validate.code.ValidateCodeProcessor;
 import com.imooc.security.core.validate.code.ValidateCodeType;
-import com.imooc.security.core.validate.code.image.ImageCode;
 
 public abstract class AbstractValidateCodeProcessor<C extends ValidateCode> implements ValidateCodeProcessor {
 	private SessionStrategy sessionStrategy=new HttpSessionSessionStrategy();
@@ -29,29 +28,26 @@ public abstract class AbstractValidateCodeProcessor<C extends ValidateCode> impl
 		send(request,validateCode);
 		
 	}
+	
+	@SuppressWarnings("unchecked")
 	private C generate(ServletWebRequest request){
 		String type=getProcessorType(request);
 		ValidateCodeGenerator validateCodeGenerator=validateCodeGenerators.get(type+"CodeGenerator");
 		return (C) validateCodeGenerator.generate(request);
 	}
-	public static String getProcessorType(ServletWebRequest request) {
+	private String getProcessorType(ServletWebRequest request) {
 		return StringUtils.substringAfter(request.getRequest().getRequestURI(), "/code/");
 	}
 	private void save(ServletWebRequest request, C validateCode){
 		sessionStrategy.setAttribute(request,getSessionKey(request), validateCode);
-	};
-	private String getSessionKey(ServletWebRequest request) {
-		return SESSION_KEY_PREFIX + getValidateCodeType(request).toString().toUpperCase();
 	}
-	private ValidateCodeType getValidateCodeType(ServletWebRequest request) {
-		String type = StringUtils.substringBefore(getClass().getSimpleName(), "CodeProcessor");
-		return ValidateCodeType.valueOf(type.toUpperCase());
-	}
+	
 	@Override
 	public void validate(ServletWebRequest request) {
 		ValidateCodeType processorType = getValidateCodeType(request);
 		String sessionKey = getSessionKey(request);
 
+		@SuppressWarnings("unchecked")
 		C codeInSession = (C) sessionStrategy.getAttribute(request, sessionKey);
 
 		String codeInRequest;
@@ -80,6 +76,13 @@ public abstract class AbstractValidateCodeProcessor<C extends ValidateCode> impl
 		}
 
 		sessionStrategy.removeAttribute(request, sessionKey);
+	}
+	private ValidateCodeType getValidateCodeType(ServletWebRequest request) {
+		String type = StringUtils.substringBefore(getClass().getSimpleName(), "CodeProcessor");
+		return ValidateCodeType.valueOf(type.toUpperCase());
+	}
+	private String getSessionKey(ServletWebRequest request) {
+		return SESSION_KEY_PREFIX + getValidateCodeType(request).toString().toUpperCase();
 	}
 	public abstract void send(ServletWebRequest request, C validateCode) throws Exception;
 	

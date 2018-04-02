@@ -2,7 +2,6 @@ package com.imooc.security.core.validate.code;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -15,19 +14,13 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
-import org.springframework.social.connect.web.HttpSessionSessionStrategy;
-import org.springframework.social.connect.web.SessionStrategy;
 import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
-import org.springframework.web.bind.ServletRequestBindingException;
-import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.imooc.security.core.properties.SecurityConstants;
 import com.imooc.security.core.properties.SecurityProperties;
-import com.imooc.security.core.validate.code.image.ImageCode;
-import com.imooc.security.core.validate.code.impl.AbstractValidateCodeProcessor;
 
 /**
  * @author suruiliang
@@ -40,40 +33,12 @@ public class ValidateCodeFilter extends OncePerRequestFilter implements Initiali
 
 	@Autowired
 	private AuthenticationFailureHandler authenticationFailureHandler;
-	private SessionStrategy sessionStrategy=new HttpSessionSessionStrategy();
-	private Set<String> urls=new HashSet<String>();
 	@Autowired
 	private SecurityProperties securityProperties;
 	@Autowired
 	private ValidateCodeProcessorHolder validateCodeProcessorHolder;
 	private Map<String, ValidateCodeType> urlMap = new HashMap<>();
 	private AntPathMatcher pathMatcher=new AntPathMatcher();
-
-	public AuthenticationFailureHandler getAuthenticationFailureHandler() {
-		return authenticationFailureHandler;
-	}
-
-	public void setAuthenticationFailureHandler(AuthenticationFailureHandler authenticationFailureHandler) {
-		this.authenticationFailureHandler = authenticationFailureHandler;
-	}
-
-	public final Set<String> getUrls() {
-		return urls;
-	}
-
-	public final void setUrls(Set<String> urls) {
-		this.urls = urls;
-	}
-
-	public final SecurityProperties getSecurityProperties() {
-		return securityProperties;
-	}
-
-	public final void setSecurityProperties(SecurityProperties securityProperties) {
-		this.securityProperties = securityProperties;
-	}
-
-
 
 	@Override
 	public void afterPropertiesSet() throws ServletException {
@@ -84,7 +49,6 @@ public class ValidateCodeFilter extends OncePerRequestFilter implements Initiali
 		urlMap.put(SecurityConstants.DEFAULT_LOGIN_PROCESSING_URL_MOBILE, ValidateCodeType.SMS);
 		addUrlToMap(securityProperties.getCode().getSms().getUrl(), ValidateCodeType.SMS);
 	}
-	
 	protected void addUrlToMap(String urlString, ValidateCodeType type) {
 		if (StringUtils.isNotBlank(urlString)) {
 			String[] urls = StringUtils.splitByWholeSeparatorPreserveAllTokens(urlString, ",");
@@ -123,27 +87,6 @@ public class ValidateCodeFilter extends OncePerRequestFilter implements Initiali
 			}
 		}
 		return result;
-	}
-
-	private void validate(ServletWebRequest request) throws ServletRequestBindingException {
-		String key=AbstractValidateCodeProcessor.SESSION_KEY_PREFIX+"IMAGE";
-		ImageCode codeInSession=(ImageCode) sessionStrategy.getAttribute(request, key);
-		String codeInRequest=ServletRequestUtils.getStringParameter(request.getRequest(), "imageCode");
-
-		if (StringUtils.isBlank(codeInRequest)) {
-			throw new ValidateCodeException("验证码的值不能为空");
-		}
-		if (codeInSession==null) {
-			throw new ValidateCodeException("验证码不存在");
-		}
-		if (codeInSession.isExpired()) {
-			sessionStrategy.removeAttribute(request, key);
-			throw new ValidateCodeException("验证码已过期");
-		}
-		if (!StringUtils.equals(codeInSession.getCode(), codeInRequest)) {
-			throw new ValidateCodeException("验证码不匹配");
-		}
-		sessionStrategy.removeAttribute(request, key);
 	}
 
 }

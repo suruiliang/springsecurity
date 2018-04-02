@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.imooc.security.core.authentication;
 
 import org.springframework.beans.factory.annotation.Autowired;
