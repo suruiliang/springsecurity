@@ -42,12 +42,6 @@ public class BrowserSecurityConfig extends AbstractChannelSecurityConfig {
 	@Autowired
 	private ValidateCodeSecurityConfig validateCodeSecurityConfig;
 	
-
-	@Bean
-	public PasswordEncoder passwordEncoder(){
-		return new BCryptPasswordEncoder();
-	}
-
 	@Bean
 	public PersistentTokenRepository persistentTokenRepository(){
 		JdbcTokenRepositoryImpl tokenRepository=new JdbcTokenRepositoryImpl();

@@ -1,4 +1,4 @@
-package com.imooc.security.browser.support;
+package support;
 
 /**
  * @author suruiliang

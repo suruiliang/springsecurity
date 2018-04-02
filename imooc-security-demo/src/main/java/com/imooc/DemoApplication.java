@@ -11,6 +11,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @RestController
 @EnableSwagger2
 public class DemoApplication {
+	//http://localhost:8080/oauth/authorize?response_type=code&client_id=imooc&redirect_uri=http://www.baidu.com&scope=all
 	public static void main(String[] args) {
 		SpringApplication.run(DemoApplication.class, args);
 	}

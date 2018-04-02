@@ -19,8 +19,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.imooc.security.browser.support.SimpleResponse;
 import com.imooc.security.core.properties.SecurityProperties;
+
+import support.SimpleResponse;
 
 /**
 * @author suruiliang

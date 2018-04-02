@@ -1,4 +1,4 @@
-package com.imooc.security.browser;
+package com.imooc.security;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +26,7 @@ public class MyUserDetailsService implements UserDetailsService {
 		logger.info("数据库密码是："+password);
 		return new User(username, password,
 				true, true, true, true, 
-				AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_ADMIN"));
+				AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_ADMIN,ROLE_USER"));
 	}
 
 }
