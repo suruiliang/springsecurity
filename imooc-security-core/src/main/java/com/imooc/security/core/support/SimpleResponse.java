@@ -1,4 +1,4 @@
-package support;
+package com.imooc.security.core.support;
 
 /**
  * @author suruiliang

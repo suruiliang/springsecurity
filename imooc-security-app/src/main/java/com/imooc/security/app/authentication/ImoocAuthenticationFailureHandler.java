@@ -17,8 +17,7 @@ import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.imooc.security.core.properties.LoginType;
 import com.imooc.security.core.properties.SecurityProperties;
-
-import support.SimpleResponse;
+import com.imooc.security.core.support.SimpleResponse;
 
 /**
 * @author suruiliang

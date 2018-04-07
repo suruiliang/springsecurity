@@ -20,8 +20,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.imooc.security.core.properties.SecurityProperties;
-
-import support.SimpleResponse;
+import com.imooc.security.core.support.SimpleResponse;
 
 /**
 * @author suruiliang
