@@ -1,4 +1,4 @@
-package com.imooc.security.app.validate.code.impl;
+package com.imooc.security.core.validate.code.impl;
 
 import java.util.concurrent.TimeUnit;
 
