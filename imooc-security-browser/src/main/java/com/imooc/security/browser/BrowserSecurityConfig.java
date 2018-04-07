@@ -80,7 +80,6 @@ public class BrowserSecurityConfig extends AbstractChannelSecurityConfig {
 		.authenticated()
 		.and()
 		.csrf()
-		.disable()
-		.apply(smsCodeAuthenticationSecurityConfig);
+		.disable();
 	}
 }

@@ -7,13 +7,15 @@ package com.imooc.security.core.validate.code;
  */
 
 import java.awt.image.BufferedImage;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 import lombok.Getter;
 import lombok.Setter;
 @Getter
 @Setter
-public class ValidateCode {
+public class ValidateCode implements Serializable{
+	
 	private String code;
 	private LocalDateTime expireTime;
 	public ValidateCode(String code, int expireIn) {
