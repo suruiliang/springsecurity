@@ -17,6 +17,8 @@ import org.springframework.security.web.authentication.rememberme.PersistentToke
 
 import com.imooc.security.core.authentication.AbstractChannelSecurityConfig;
 import com.imooc.security.core.authentication.mobile.SmsCodeAuthenticationSecurityConfig;
+import com.imooc.security.core.authorize.AuthorizeConfigManager;
+import com.imooc.security.core.properties.SecurityConstants;
 import com.imooc.security.core.properties.SecurityProperties;
 import com.imooc.security.core.validate.code.ValidateCodeSecurityConfig;
 
@@ -42,6 +44,8 @@ public class BrowserSecurityConfig extends AbstractChannelSecurityConfig {
 	private SmsCodeAuthenticationSecurityConfig smsCodeAuthenticationSecurityConfig;
 	@Autowired
 	private ValidateCodeSecurityConfig validateCodeSecurityConfig;
+	@Autowired
+	private AuthorizeConfigManager authorizeConfigManager;
 	
 	@Bean
 	public PersistentTokenRepository persistentTokenRepository(){
@@ -59,13 +63,13 @@ public class BrowserSecurityConfig extends AbstractChannelSecurityConfig {
 		.apply(validateCodeSecurityConfig)
 		.and()
 		.apply(smsCodeAuthenticationSecurityConfig)
-		.and()
-		.formLogin()
+//		.and()
+//		.formLogin()
 		//		http.httpBasic()
-		.loginPage("/authentication/require")
-		.loginProcessingUrl("/authentication/form")
-		.successHandler(imoocAuthenticationSuccessHandler)
-		.failureHandler(imoocAuthenticationFailureHandler)
+//		.loginPage("/authentication/require")
+//		.loginProcessingUrl("/authentication/form")
+//		.successHandler(imoocAuthenticationSuccessHandler)
+//		.failureHandler(imoocAuthenticationFailureHandler)
 		.and()
 		.rememberMe()
 		.tokenRepository(persistentTokenRepository())
@@ -84,5 +88,7 @@ public class BrowserSecurityConfig extends AbstractChannelSecurityConfig {
 		.and()
 		.csrf()
 		.disable();
+		
+		authorizeConfigManager.config(http.authorizeRequests());
 	}
 }

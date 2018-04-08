@@ -9,6 +9,7 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
 import com.imooc.security.core.authentication.mobile.SmsCodeAuthenticationSecurityConfig;
+import com.imooc.security.core.authorize.AuthorizeConfigManager;
 import com.imooc.security.core.properties.SecurityConstants;
 import com.imooc.security.core.properties.SecurityProperties;
 import com.imooc.security.core.validate.code.ValidateCodeSecurityConfig;
@@ -26,6 +27,8 @@ public class ImoocResourceServerConfig extends ResourceServerConfigurerAdapter {
 	private ValidateCodeSecurityConfig validateCodeSecurityConfig;
 	@Autowired
 	private SecurityProperties securityProperties;
+	@Autowired
+	private AuthorizeConfigManager authorizeConfigManager;
 
 	@Override
 	public void configure(HttpSecurity http) throws Exception {
@@ -41,17 +44,19 @@ public class ImoocResourceServerConfig extends ResourceServerConfigurerAdapter {
 		.apply(smsCodeAuthenticationSecurityConfig)
 		.and()
 		.formLogin()
-		.and()
-		.authorizeRequests()
-		.antMatchers("/authentication/require","/authentication/form",
-				securityProperties.getBrowser().getLoginPage(),
-				"/code/*")
-		.permitAll()
-		.anyRequest()
-		.authenticated()
+//		.and()
+//		.authorizeRequests()
+//		.antMatchers("/authentication/require","/authentication/form",
+//				securityProperties.getBrowser().getLoginPage(),
+//				"/code/*")
+//		.permitAll()
+//		.anyRequest()
+//		.authenticated()
 		.and()
 		.csrf()
 		.disable();
+		
+		authorizeConfigManager.config(http.authorizeRequests());
 	}
 
 }
