@@ -23,33 +23,38 @@ public abstract class AbstractValidateCodeProcessor<C extends ValidateCode> impl
 	private Map<String, ValidateCodeGenerator> validateCodeGenerators;
 	@Autowired
 	private ValidateCodeRepository validateCodeRepository;
-	
-	
+
+
 	@Override
 	public void create(ServletWebRequest request) throws Exception {
 		C validateCode=generate(request);
 		save(request,validateCode);
 		send(request,validateCode);
-		
+
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	private C generate(ServletWebRequest request){
+		//type=sms/image
 		String type=getProcessorType(request);
 		ValidateCodeGenerator validateCodeGenerator=validateCodeGenerators.get(type+"CodeGenerator");
 		return (C) validateCodeGenerator.generate(request);
 	}
+
 	private String getProcessorType(ServletWebRequest request) {
 		return StringUtils.substringAfter(request.getRequest().getRequestURI(), "/code/");
 	}
+
 	private void save(ServletWebRequest request, C validateCode){
 		ValidateCode code=new ValidateCode(validateCode.getCode(), validateCode.getExpireTime());
-		validateCodeRepository.save(request, code, getValidateCodeType(request));
+		validateCodeRepository.save(request, code, getValidateCodeType());
 	}
-	
+
+	public abstract void send(ServletWebRequest request, C validateCode) throws Exception;
+
 	@Override
 	public void validate(ServletWebRequest request) {
-		ValidateCodeType codeType = getValidateCodeType(request);
+		ValidateCodeType codeType = getValidateCodeType();
 
 		@SuppressWarnings("unchecked")
 		C codeInSession = (C) validateCodeRepository.get(request, codeType);
@@ -81,13 +86,10 @@ public abstract class AbstractValidateCodeProcessor<C extends ValidateCode> impl
 
 		validateCodeRepository.remove(request, codeType);
 	}
-	private ValidateCodeType getValidateCodeType(ServletWebRequest request) {
+	private ValidateCodeType getValidateCodeType() {
+		//type=sms/image
 		String type = StringUtils.substringBefore(getClass().getSimpleName(), "CodeProcessor");
 		return ValidateCodeType.valueOf(type.toUpperCase());
 	}
-	private String getSessionKey(ServletWebRequest request) {
-		return SESSION_KEY_PREFIX + getValidateCodeType(request).toString().toUpperCase();
-	}
-	public abstract void send(ServletWebRequest request, C validateCode) throws Exception;
-	
+
 }

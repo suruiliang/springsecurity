@@ -1,12 +1,5 @@
 package com.imooc.security.core.validate.code;
-/**
- * @author suruiliang
- * @version 创建时间：2018年3月31日 下午2:17:39
- * @ClassName 类名称
- * @Description 类描述
- */
 
-import java.awt.image.BufferedImage;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 

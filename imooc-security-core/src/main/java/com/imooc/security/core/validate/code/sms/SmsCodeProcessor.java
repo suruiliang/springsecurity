@@ -8,7 +8,8 @@ import org.springframework.web.context.request.ServletWebRequest;
 import com.imooc.security.core.validate.code.ValidateCode;
 import com.imooc.security.core.validate.code.impl.AbstractValidateCodeProcessor;
 
-@Component("smsValidateCodeProcessor")
+//@Component("smsValidateCodeProcessor")
+@Component("smsCodeProcessor")
 public class SmsCodeProcessor extends AbstractValidateCodeProcessor<ValidateCode> {
 	@Autowired
 	private SmsCodeSender smsCodeSender;

@@ -9,5 +9,4 @@ public class SmsCodeProperties {
 	private int length=4;
 	private int expireIn=60;
 	private String url="";
-
 }

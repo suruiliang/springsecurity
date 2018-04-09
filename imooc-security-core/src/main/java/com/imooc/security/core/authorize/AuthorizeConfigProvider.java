@@ -5,5 +5,4 @@ import org.springframework.security.config.annotation.web.configurers.Expression
 
 public interface AuthorizeConfigProvider {
 	void config(ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry config);
-
 }

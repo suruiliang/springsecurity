@@ -25,6 +25,7 @@ public class TokenStoreConfig {
 	public TokenStore redisTokenStore(){
 		return new RedisTokenStore(redisConnectionFactory);
 	}
+	
 	@Configuration
 	@ConditionalOnProperty(prefix="imooc.security.oauth2",name="storeType",havingValue="jwt",matchIfMissing=true)
 	public static class JwtTokenConfig{

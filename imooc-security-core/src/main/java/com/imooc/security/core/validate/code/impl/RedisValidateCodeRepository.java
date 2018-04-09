@@ -13,7 +13,7 @@ import com.imooc.security.core.validate.code.ValidateCodeException;
 import com.imooc.security.core.validate.code.ValidateCodeRepository;
 import com.imooc.security.core.validate.code.ValidateCodeType;
 
-@Component
+//@Component
 public class RedisValidateCodeRepository implements ValidateCodeRepository {
 	@Autowired
 	private RedisTemplate<Object, Object> redisTemplate;

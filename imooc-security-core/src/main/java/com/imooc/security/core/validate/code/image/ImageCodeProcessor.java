@@ -7,7 +7,8 @@ import org.springframework.web.context.request.ServletWebRequest;
 
 import com.imooc.security.core.validate.code.impl.AbstractValidateCodeProcessor;
 
-@Component("imageValidateCodeProcessor")
+//@Component("imageValidateCodeProcessor")
+@Component("imageCodeProcessor")
 public class ImageCodeProcessor extends AbstractValidateCodeProcessor<ImageCode> {
 
 	@Override

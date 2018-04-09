@@ -6,9 +6,10 @@ import org.springframework.web.context.request.ServletWebRequest;
 
 import com.imooc.security.core.validate.code.ValidateCodeGenerator;
 import com.imooc.security.core.validate.code.image.ImageCode;
+import com.imooc.security.core.validate.code.image.ImageCodeGenerator;
 
 //@Component("imageCodeGenerator")
-public class DemoImageCodeGenerator implements ValidateCodeGenerator {
+public class DemoImageCodeGenerator extends ImageCodeGenerator {
 
 	@Override
 	public ImageCode generate(ServletWebRequest request) {

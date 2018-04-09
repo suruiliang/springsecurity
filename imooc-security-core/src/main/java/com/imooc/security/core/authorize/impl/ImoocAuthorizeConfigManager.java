@@ -1,4 +1,4 @@
-package com.imooc.security.core.authorize;
+package com.imooc.security.core.authorize.impl;
 
 
 import java.util.List;
@@ -8,6 +8,9 @@ import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.ExpressionUrlAuthorizationConfigurer;
 import org.springframework.stereotype.Component;
+
+import com.imooc.security.core.authorize.AuthorizeConfigManager;
+import com.imooc.security.core.authorize.AuthorizeConfigProvider;
 
 @Component
 public class ImoocAuthorizeConfigManager implements AuthorizeConfigManager {

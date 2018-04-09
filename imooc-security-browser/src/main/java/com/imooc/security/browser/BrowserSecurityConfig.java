@@ -76,16 +76,16 @@ public class BrowserSecurityConfig extends AbstractChannelSecurityConfig {
 		.tokenValiditySeconds(securityProperties.getBrowser().getRememberMeSeconds())
 		.userDetailsService(userDetailsService)
 		.and()
-		.authorizeRequests()
-		.antMatchers("/authentication/require",
-				securityProperties.getBrowser().getLoginPage(),
-				"/code/*")
-		.permitAll()
-		.antMatchers(HttpMethod.GET,"/user/*")
-		.hasAnyRole("ADMIN")
-		.anyRequest()
-		.authenticated()
-		.and()
+//		.authorizeRequests()
+//		.antMatchers("/authentication/require",
+//				securityProperties.getBrowser().getLoginPage(),
+//				"/code/*")
+//		.permitAll()
+//		.antMatchers(HttpMethod.GET,"/user/*")
+//		.hasAnyRole("ADMIN")
+//		.anyRequest()
+//		.authenticated()
+//		.and()
 		.csrf()
 		.disable();
 		
